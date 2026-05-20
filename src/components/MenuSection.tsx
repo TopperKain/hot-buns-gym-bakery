@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
 import { useRef } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import cafeFront from '@/assets/images/cafe_front.png'
 
 const menuItems = [
   {
@@ -79,6 +80,19 @@ const MenuSection = () => {
             </motion.div>
           ))}
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="mt-16"
+        >
+          <img 
+            src={cafeFront} 
+            alt="Hot Buns Cafe Front" 
+            className="w-full rounded-xl shadow-2xl border-4 border-border object-cover max-h-[600px]"
+          />
+        </motion.div>
       </div>
     </section>
   )
