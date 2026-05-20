@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
-import heroImage from '@/assets/images/hero-pastry-dumbbell.png'
+import heroImage from '@/assets/images/IMG_2641.png'
 
 const HeroSection = () => {
   const scrollToSignup = () => {
