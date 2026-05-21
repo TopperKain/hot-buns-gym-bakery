@@ -21,3 +21,14 @@ No problem! If you were just checking things out and don’t need to keep this c
 📄 License For Spark Template Resources 
 
 The Spark Template files and resources from GitHub are licensed under the terms of the MIT license, Copyright GitHub, Inc.
+
+## Azure Application Insights analytics
+
+This repo now supports client-side telemetry through Azure Application Insights.
+
+1. Create an Application Insights resource in Azure and copy its **connection string**.
+2. Add a local `.env` file (already gitignored) with:
+   - `VITE_APPINSIGHTS_CONNECTION_STRING=InstrumentationKey=...;IngestionEndpoint=...`
+3. Restart the dev server after changing environment variables.
+
+If `VITE_APPINSIGHTS_CONNECTION_STRING` is not set, telemetry initialization is skipped.
