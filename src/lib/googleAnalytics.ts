@@ -1,4 +1,3 @@
-const measurementId = import.meta.env.VITE_GOOGLE_ANALYTICS_MEASUREMENT_ID?.trim()
 const googleAnalyticsScriptId = 'google-analytics-script'
 
 let googleAnalyticsInitialized = false
@@ -11,6 +10,8 @@ declare global {
 }
 
 export const initializeGoogleAnalytics = (): boolean => {
+  const measurementId = import.meta.env.VITE_GOOGLE_ANALYTICS_MEASUREMENT_ID?.trim()
+
   if (!measurementId || googleAnalyticsInitialized || typeof window === 'undefined') {
     return false
   }
