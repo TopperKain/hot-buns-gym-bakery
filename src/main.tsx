@@ -5,12 +5,14 @@ import "@github/spark/spark"
 import App from './App.tsx'
 import { ErrorFallback } from './ErrorFallback.tsx'
 import { initializeAppInsights } from './lib/appInsights'
+import { initializeGoogleAnalytics } from './lib/googleAnalytics'
 
 import "./main.css"
 import "./styles/theme.css"
 import "./index.css"
 
 initializeAppInsights()
+initializeGoogleAnalytics()
 
 createRoot(document.getElementById('root')!).render(
   <ErrorBoundary FallbackComponent={ErrorFallback}>

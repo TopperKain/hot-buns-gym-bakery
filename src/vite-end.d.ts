@@ -4,6 +4,7 @@ declare const BASE_KV_SERVICE_URL: string
 
 interface ImportMetaEnv {
   readonly VITE_APPINSIGHTS_CONNECTION_STRING?: string
+  readonly VITE_GOOGLE_ANALYTICS_MEASUREMENT_ID?: string
 }
 
 interface ImportMeta {
