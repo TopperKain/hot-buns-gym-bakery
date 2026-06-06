@@ -1,11 +1,12 @@
 const googleAnalyticsScriptId = 'google-analytics-script'
 
 let googleAnalyticsInitialized = false
+type GtagCall = [string, ...unknown[]]
 
 declare global {
   interface Window {
-    dataLayer: unknown[]
-    gtag?: (...args: unknown[]) => void
+    dataLayer: GtagCall[]
+    gtag?: (...args: GtagCall) => void
   }
 }
 
@@ -17,7 +18,7 @@ export const initializeGoogleAnalytics = (): boolean => {
   }
 
   window.dataLayer = window.dataLayer || []
-  window.gtag = (...args: unknown[]) => {
+  window.gtag = (...args: GtagCall) => {
     window.dataLayer.push(args)
   }
 
