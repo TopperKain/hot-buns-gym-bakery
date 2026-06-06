@@ -22,13 +22,13 @@ No problem! If you were just checking things out and don’t need to keep this c
 
 The Spark Template files and resources from GitHub are licensed under the terms of the MIT license, Copyright GitHub, Inc.
 
-## Azure Application Insights analytics
+## Google Analytics
 
-This repo now supports client-side telemetry through Azure Application Insights.
+This repo now supports client-side telemetry through Google Analytics.
 
-1. Create an Application Insights resource in Azure and copy its **connection string**.
+1. Create a Google Analytics property and copy its **Measurement ID** (`G-XXXXXXXXXX`).
 2. Add a local `.env` file (already gitignored) with:
-   - `VITE_APPINSIGHTS_CONNECTION_STRING=InstrumentationKey=...;IngestionEndpoint=...`
+   - `VITE_GOOGLE_ANALYTICS_ID=G-XXXXXXXXXX`
 3. Restart the dev server after changing environment variables.
 
-If `VITE_APPINSIGHTS_CONNECTION_STRING` is not set, telemetry initialization is skipped.
+If `VITE_GOOGLE_ANALYTICS_ID` is not set, telemetry initialization is skipped.
