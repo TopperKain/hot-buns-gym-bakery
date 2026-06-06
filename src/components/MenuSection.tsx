@@ -60,7 +60,7 @@ const MenuSection = () => {
               animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.4, delay: index * 0.1 }}
               whileHover={{ scale: 1.03, y: -5 }}
-              className="cursor-pointer"
+              className="cursor-default"
             >
               <Card className={`h-full bg-gradient-to-br ${item.gradient} border-2 hover:border-secondary transition-all duration-300 shadow-md hover:shadow-2xl`}>
                 <CardHeader>

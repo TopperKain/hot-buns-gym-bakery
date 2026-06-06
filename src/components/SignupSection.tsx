@@ -2,45 +2,70 @@ import { useState, FormEvent } from 'react'
 import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
 import { useRef } from 'react'
-import { useKV } from '@github/spark/hooks'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
 import { Envelope } from '@phosphor-icons/react'
+import { trackEvent } from '@/lib/appInsights'
+import { hasWaitlistApi, submitWaitlistEmail } from '@/lib/waitlist'
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 const SignupSection = () => {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.3 })
   const [email, setEmail] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [emails, setEmails] = useKV<string[]>('signup-emails', [])
+  const [emailError, setEmailError] = useState('')
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    
-    if (!email || !email.includes('@')) {
-      toast.error('Please enter a valid email address')
+
+    const normalizedEmail = email.trim().toLowerCase()
+
+    if (!EMAIL_PATTERN.test(normalizedEmail)) {
+      setEmailError('Please enter a valid email address.')
       return
     }
 
+    if (!hasWaitlistApi) {
+      toast.error('Waitlist is temporarily unavailable.', {
+        description: 'Please check back soon while we finish setup.',
+      })
+      trackEvent('waitlist_signup_unavailable')
+      return
+    }
+
+    setEmailError('')
     setIsSubmitting(true)
 
-    if (emails && emails.includes(email.toLowerCase())) {
-      toast.info('You\'re already on the list! We\'ll notify you when we open.')
-      setIsSubmitting(false)
-      setEmail('')
-      return
-    }
+    try {
+      const submissionResult = await submitWaitlistEmail(normalizedEmail)
+      const emailDomain = normalizedEmail.split('@')[1] ?? 'unknown'
 
-    setEmails((currentEmails) => [...(currentEmails || []), email.toLowerCase()])
-    
-    toast.success('You\'re in! Get ready for gains and grains.', {
-      description: 'We\'ll email you as soon as we open our doors.',
-    })
-    
-    setEmail('')
-    setIsSubmitting(false)
+      if (submissionResult === 'already_registered') {
+        toast.info('You\'re already on the list! We\'ll notify you when we open.')
+        trackEvent('waitlist_signup_duplicate', { emailDomain })
+      } else {
+        toast.success('You\'re in! Get ready for gains and grains.', {
+          description: 'We\'ll email you as soon as we open our doors.',
+        })
+        trackEvent('waitlist_signup_success', { emailDomain })
+      }
+
+      setEmail('')
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Please try again in a minute.'
+
+      toast.error('Could not join the waitlist.', {
+        description: errorMessage,
+      })
+      trackEvent('waitlist_signup_failure')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -74,21 +99,39 @@ const SignupSection = () => {
                 type="email"
                 placeholder="your.email@example.com"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value)
+                  if (emailError) {
+                    setEmailError('')
+                  }
+                }}
                 className="text-lg py-6 border-2 focus:border-secondary"
+                aria-invalid={Boolean(emailError)}
+                aria-describedby={emailError ? 'email-error' : undefined}
                 required
               />
+              {emailError && (
+                <p id="email-error" role="alert" className="text-sm text-destructive text-left">
+                  {emailError}
+                </p>
+              )}
             </div>
             
             <Button
               type="submit"
               size="lg"
-              disabled={isSubmitting}
+              disabled={isSubmitting || !hasWaitlistApi}
               className="cta-button w-full bg-accent hover:bg-accent/90 text-accent-foreground text-lg py-6 shadow-lg hover:shadow-xl transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isSubmitting ? 'Adding you...' : 'Notify Me'}
+              {hasWaitlistApi ? (isSubmitting ? 'Adding you...' : 'Notify Me') : 'Waitlist Unavailable'}
             </Button>
           </form>
+
+          {!hasWaitlistApi && (
+            <p className="text-sm text-destructive mt-4">
+              Waitlist signup is being configured for this environment.
+            </p>
+          )}
 
           <p className="text-sm text-muted-foreground mt-6 italic">
             No spam, just hot buns. Unsubscribe anytime.

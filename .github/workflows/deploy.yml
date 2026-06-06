@@ -35,6 +35,10 @@ jobs:
         run: npm run build
         env:
           VITE_APPINSIGHTS_CONNECTION_STRING: ${{ secrets.APPINSIGHTS_CONNECTION_STRING }}
+          VITE_WAITLIST_API_URL: ${{ vars.WAITLIST_API_URL }}
+          VITE_SOCIAL_INSTAGRAM_URL: ${{ vars.SOCIAL_INSTAGRAM_URL }}
+          VITE_SOCIAL_X_URL: ${{ vars.SOCIAL_X_URL }}
+          VITE_SOCIAL_FACEBOOK_URL: ${{ vars.SOCIAL_FACEBOOK_URL }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
