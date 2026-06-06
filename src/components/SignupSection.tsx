@@ -8,12 +8,13 @@ import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
 import { Envelope } from '@phosphor-icons/react'
 
-const STORAGE_KEY = 'signup-emails'
+const STORAGE_KEY = 'hot-buns-gym-signup-emails'
 
 function getStoredEmails(): string[] {
   try {
     return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '[]')
-  } catch {
+  } catch (err) {
+    console.error('Failed to parse stored emails:', err)
     return []
   }
 }
