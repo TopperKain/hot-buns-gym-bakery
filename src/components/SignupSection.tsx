@@ -2,19 +2,33 @@ import { useState, FormEvent } from 'react'
 import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
 import { useRef } from 'react'
-import { useKV } from '@github/spark/hooks'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
 import { Envelope } from '@phosphor-icons/react'
 
+const STORAGE_KEY = 'hot-buns-gym-signup-emails'
+
+function getStoredEmails(): string[] {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '[]')
+  } catch (err) {
+    console.error('Failed to parse stored emails:', err)
+    return []
+  }
+}
+
+function addStoredEmail(email: string): void {
+  const current = getStoredEmails()
+  localStorage.setItem(STORAGE_KEY, JSON.stringify([...current, email]))
+}
+
 const SignupSection = () => {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.3 })
   const [email, setEmail] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [emails, setEmails] = useKV<string[]>('signup-emails', [])
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
@@ -26,14 +40,15 @@ const SignupSection = () => {
 
     setIsSubmitting(true)
 
-    if (emails && emails.includes(email.toLowerCase())) {
+    const emails = getStoredEmails()
+    if (emails.includes(email.toLowerCase())) {
       toast.info('You\'re already on the list! We\'ll notify you when we open.')
       setIsSubmitting(false)
       setEmail('')
       return
     }
 
-    setEmails((currentEmails) => [...(currentEmails || []), email.toLowerCase()])
+    addStoredEmail(email.toLowerCase())
     
     toast.success('You\'re in! Get ready for gains and grains.', {
       description: 'We\'ll email you as soon as we open our doors.',
