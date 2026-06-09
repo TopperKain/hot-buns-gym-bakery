@@ -1,0 +1,21 @@
+{
+  "name": "hot-buns-waitlist-api",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "func start",
+    "start:debug": "func start --verbose"
+  },
+  "dependencies": {
+    "@azure/data-tables": "^13.3.1",
+    "@azure/functions": "^4.7.3",
+    "@azure/identity": "^4.13.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.16.0",
+    "typescript": "~5.7.2"
+  }
+}

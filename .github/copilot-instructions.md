@@ -6,8 +6,9 @@ This repository is a single-page **Vite + React + TypeScript** marketing site.
 - Entry point is `src/main.tsx`; page composition is in `src/App.tsx`.
 - UI is built from section components in `src/components/*.tsx`.
 - Shared primitives live in `src/components/ui/*.tsx`.
+- Backend waitlist API lives in `api/` as an Azure Functions TypeScript app.
 - Styling uses Tailwind utility classes plus theme tokens from `src/styles/theme.css` and global styles in `src/main.css` / `src/index.css`.
-- Spark integrations are required (`@github/spark` import in `src/main.tsx` and Spark Vite plugins in `vite.config.ts`).
+- Deployment target is GitHub Pages static hosting; features that need persistence must call external APIs via `VITE_*` build-time config.
 
 ## Coding expectations
 - Prefer TypeScript-first, functional React components.

@@ -5,8 +5,10 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
+        "dev:api": "npm --prefix api run start",
         "kill": "fuser -k 5000/tcp",
         "build": "tsc -b --noCheck && vite build",
+        "build:api": "npm --prefix api run build",
         "lint": "eslint .",
         "optimize": "vite optimize",
         "preview": "vite preview"
